@@ -21,5 +21,9 @@
 			</array>
 		</dict>
 	</dict>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Your microphone will be used to record your speech when you press the "Start Recording" button.</string>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Speech recognition will be used to determine which words you speak into the device's microphone.</string>
 </dict>
 </plist>

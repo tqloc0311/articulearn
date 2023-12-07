@@ -1,24 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ezq-99-qr7">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--View Controller2-->
+        <scene sceneID="tOM-wN-9RP">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                <viewController id="ezq-99-qr7" customClass="ViewController2" customModule="ArticuLearn" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cnx-HE-ROn">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="luv-VP-Qi8">
+                                <rect key="frame" x="16" y="768" width="361" height="30"/>
+                                <state key="normal" title="Start Recording!"/>
+                                <connections>
+                                    <action selector="recordButtonTapped" destination="ezq-99-qr7" eventType="touchUpInside" id="qZ9-J5-vHf"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="z6N-UG-Aox">
+                                <rect key="frame" x="16" y="59" width="361" height="701"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="40"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="nh8-uL-vcX"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="luv-VP-Qi8" firstAttribute="top" secondItem="z6N-UG-Aox" secondAttribute="bottom" constant="8" id="DjN-i1-tfr"/>
+                            <constraint firstItem="nh8-uL-vcX" firstAttribute="trailing" secondItem="luv-VP-Qi8" secondAttribute="trailing" constant="16" id="H9Q-UB-q4m"/>
+                            <constraint firstItem="nh8-uL-vcX" firstAttribute="trailing" secondItem="z6N-UG-Aox" secondAttribute="trailing" constant="16" id="OhL-Yi-W0I"/>
+                            <constraint firstItem="nh8-uL-vcX" firstAttribute="bottom" secondItem="luv-VP-Qi8" secondAttribute="bottom" constant="20" id="Vmg-gJ-xk7"/>
+                            <constraint firstItem="z6N-UG-Aox" firstAttribute="leading" secondItem="nh8-uL-vcX" secondAttribute="leading" constant="16" id="dHI-xT-2yJ"/>
+                            <constraint firstItem="luv-VP-Qi8" firstAttribute="leading" secondItem="nh8-uL-vcX" secondAttribute="leading" constant="16" id="m4q-KD-X6W"/>
+                            <constraint firstItem="z6N-UG-Aox" firstAttribute="top" secondItem="nh8-uL-vcX" secondAttribute="top" id="mWL-Pw-kiv"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="recordButton" destination="luv-VP-Qi8" id="Irc-wO-ij7"/>
+                        <outlet property="textView" destination="z6N-UG-Aox" id="nxC-16-xen"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aEn-ZN-7ik" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="132" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>
