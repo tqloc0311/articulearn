@@ -27,8 +27,8 @@ class SplashViewController: ViewController<SplashViewModel> {
     
     // MARK: UI
     
-    override func makeUI() {
-        super.makeUI()
+    override func setupUI() {
+        super.setupUI()
         
         hideNavigationBarIfNeeded = true
         
@@ -73,7 +73,7 @@ class SplashViewController: ViewController<SplashViewModel> {
         super.binding()
         
         let output = viewModel.transform(input: .init(trigger: rxViewWillAppear.asDriverOnErrorJustComplete()))
-        output.goNext
+        output.configured
             .drive(onNext: { [weak self] in
                 self?.showNextScreen()
             })

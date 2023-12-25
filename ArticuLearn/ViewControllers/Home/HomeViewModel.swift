@@ -41,7 +41,8 @@ class HomeViewModel: ViewModel {
         input.viewWillAppear
             .asObservable()
             .flatMap { [weak self] _ -> Observable<[Lesson]> in
-                return self?.fetchLessons().trackError(errorTracker) ?? .empty()
+                guard let self = self else { return .empty() }
+                return self.fetchLessons().trackError(errorTracker)
             }
             .map { $0.shuffled() }
         ~> rxLessons
@@ -53,29 +54,36 @@ class HomeViewModel: ViewModel {
         
         let isSpeaking = rxIsSpeaking.asDriver()
         
-        return Output(reloadCollectionViewIfNeeded: reloadCollectionViewIfNeeded,
-                      isSpeaking: isSpeaking,
-                      error: error)
+        return Output(
+            reloadCollectionViewIfNeeded: reloadCollectionViewIfNeeded,
+            isSpeaking: isSpeaking,
+            error: error
+        )
     }
     
     private func fetchLessons() -> Single<[Lesson]> {
-        return Single.create { single in
-            Task {
-                let lessons = await LessonRepository.shared.fetchLessons()
-                single(.success(lessons))
+            return Single.create { single in
+                Task {
+                    do {
+                        let lessons = try await LessonRepository.shared.fetchLessons()
+                        single(.success(lessons))
+                    } catch {
+                        single(.failure(error))
+                    }
+                }
+
+                return Disposables.create()
             }
-            
-            return Disposables.create()
         }
-    }
     
     // MARK: Public Methods
     
     func startListening(with lesson: Lesson) {
-        if textToSpeech.isSpeaking {
+        if textToSpeech.state == .speaking {
             textToSpeech.stop()
         } else {
-            textToSpeech.speak(lesson.title + ".\n\n\n" + lesson.content)
+            let breaking = Array(repeating: Constants.newlineCharacter, count: 3).joined()
+            textToSpeech.speak(lesson.title + breaking + lesson.content)
         }
     }
     
@@ -101,7 +109,21 @@ extension HomeViewModel {
 // MARK: TextToSpeechDelegate
 
 extension HomeViewModel: TextToSpeechDelegate {
-    func textToSpeechIsSpeaking(isSpeaking: Bool) {
+    func textToSpeechDidChangeState(isSpeaking: Bool) {
         rxIsSpeaking.accept(isSpeaking)
     }
+}
+
+// MARK: Constants
+
+extension HomeViewModel {
+    struct Constants {
+        static let newlineCharacter = "\n"
+    }
+}
+
+// MARK: Error Enum
+
+enum HomeViewModelError: Error {
+    case selfDeallocated
 }

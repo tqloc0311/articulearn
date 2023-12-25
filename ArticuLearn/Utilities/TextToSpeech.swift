@@ -8,22 +8,33 @@
 import AVFoundation
 
 protocol TextToSpeechDelegate: AnyObject {
-    func textToSpeechIsSpeaking(isSpeaking: Bool)
+    func textToSpeechDidChangeState(isSpeaking: Bool)
 }
 
 class TextToSpeech: NSObject {
-    
-    // MARK: Public Methods
-    
-    var isSpeaking: Bool {
-        return synthesizer.isSpeaking
+
+    enum SpeechState {
+        case speaking, paused, notSpeaking
     }
+
+    // MARK: Public Properties
     
+    var state: SpeechState {
+        return isSpeaking ? .speaking : (isPaused ? .paused : .notSpeaking)
+    }
+
     weak var delegate: TextToSpeechDelegate?
-    
-    // MARK: Private Methods
+
+    // MARK: Private Properties
     
     private let synthesizer = AVSpeechSynthesizer()
+    private var isSpeaking: Bool {
+        return synthesizer.isSpeaking
+    }
+    private var isPaused: Bool {
+        return synthesizer.isPaused
+    }
+    
     private var voices: [AVSpeechSynthesisVoice] {
         return [
             AVSpeechSynthesisVoice(identifier: "com.apple.voice.compact.en-US.Samantha"),
@@ -44,52 +55,64 @@ class TextToSpeech: NSObject {
         synthesizer.delegate = self
     }
 
-    // MARK: Public methods
+    // MARK: Public Methods
     
     func speak(_ text: String) {
-        if synthesizer.isSpeaking {
-            synthesizer.stopSpeaking(at: .immediate)
-        }
-        
+        stopSpeaking()
+
         let utterance = AVSpeechUtterance(string: text)
         utterance.rate = AVSpeechUtteranceDefaultSpeechRate
         utterance.voice = voices.randomElement()
-        
+
         synthesizer.speak(utterance)
-        delegate?.textToSpeechIsSpeaking(isSpeaking: true)
+        notifyDelegate()
     }
 
     func pause() {
         synthesizer.pauseSpeaking(at: .immediate)
+        notifyDelegate()
     }
 
     func resume() {
         synthesizer.continueSpeaking()
+        notifyDelegate()
     }
 
     func stop() {
-        synthesizer.stopSpeaking(at: .immediate)
+        stopSpeaking()
+        notifyDelegate()
     }
 
+    // MARK: Private Methods
+    
+    private func stopSpeaking() {
+        if isSpeaking {
+            synthesizer.stopSpeaking(at: .immediate)
+        }
+    }
+
+    private func notifyDelegate() {
+        delegate?.textToSpeechDidChangeState(isSpeaking: isSpeaking)
+    }
 }
 
 // MARK: - AVSpeechSynthesizerDelegate
 
 extension TextToSpeech: AVSpeechSynthesizerDelegate {
-    
+
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
-        delegate?.textToSpeechIsSpeaking(isSpeaking: false)
+        notifyDelegate()
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didPause utterance: AVSpeechUtterance) {
-        delegate?.textToSpeechIsSpeaking(isSpeaking: false)
+        notifyDelegate()
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didContinue utterance: AVSpeechUtterance) {
-        delegate?.textToSpeechIsSpeaking(isSpeaking: true)
+        notifyDelegate()
     }
 
     func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
-        delegate?.textToSpeechIsSpeaking(isSpeaking: false)
+        notifyDelegate()
     }
 }

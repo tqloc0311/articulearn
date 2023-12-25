@@ -37,7 +37,7 @@ open class ViewController<VM: ViewModel>: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        makeUI()
+        setupUI()
         binding()
     }
     
@@ -65,7 +65,7 @@ open class ViewController<VM: ViewModel>: UIViewController {
         navigationBarVisibilityManager.restorePreviousNavigationBarVisibility(for: self)
     }
     
-    open func makeUI() {
+    open func setupUI() {
         view.backgroundColor = .white
         
         let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(goBack))

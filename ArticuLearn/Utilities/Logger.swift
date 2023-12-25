@@ -8,7 +8,7 @@
 import Foundation
 import os
 
-enum LogType {
+enum LogType: String {
     case info, warning, error, debug
 }
 
@@ -18,20 +18,19 @@ protocol Loggable {
 
 struct ConsoleLogger: Loggable {
     private let logger = Logger()
-    
+
     func log(type: LogType = .debug, message: String) {
         switch type {
         case .info:
-            logger.info("\(message)")
+            logger.info("\(type.rawValue.uppercased()): \(message)")
         case .warning:
-            logger.warning("\(message)")
+            logger.warning("\(type.rawValue.uppercased()): \(message)")
         case .error:
-            logger.error("\(message)")
+            logger.error("\(type.rawValue.uppercased()): \(message)")
         case .debug:
-            logger.debug("\(message)")
+            logger.debug("\(type.rawValue.uppercased()): \(message)")
         }
     }
-    
 }
 
 let Log = ConsoleLogger()

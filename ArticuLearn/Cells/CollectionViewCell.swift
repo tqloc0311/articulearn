@@ -12,13 +12,13 @@ open class CollectionViewCell: UICollectionViewCell {
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        makeUI()
+        setupUI()
     }
     
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
-        makeUI()
+        setupUI()
     }
     
-    open func makeUI() {}
+    open func setupUI() {}
 }

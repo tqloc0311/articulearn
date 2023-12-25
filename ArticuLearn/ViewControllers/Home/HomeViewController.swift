@@ -73,8 +73,8 @@ class HomeViewController: ViewController<HomeViewModel> {
     
     // MARK: UI
     
-    override func makeUI() {
-        super.makeUI()
+    override func setupUI() {
+        super.setupUI()
         
         hideBackButtonIfNeeded = true
         navigationItem.title = "ArticuLearn"

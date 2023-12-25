@@ -11,8 +11,8 @@ import SnapKit
 class SettingsViewController: ViewController<SettingsViewModel> {
     
     // MARK: UI
-    override func makeUI() {
-        super.makeUI()
+    override func setupUI() {
+        super.setupUI()
         
         hideBackButtonIfNeeded = true
         navigationItem.title = "Settings"

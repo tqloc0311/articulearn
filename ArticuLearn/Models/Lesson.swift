@@ -7,8 +7,15 @@
 
 import Foundation
 
-struct Lesson {
+struct Lesson: Decodable {
     let id: String
     let title: String
     let content: String
+    
+    enum CodingKeys: String, CodingKey
+    {
+        case id = "_id"
+        case title
+        case content = "story"
+    }
 }

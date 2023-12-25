@@ -21,8 +21,8 @@ class LessonTileCollectionCell: CollectionViewCell {
         .withFont(.systemFont(ofSize: 16))
         .build()
     
-    override func makeUI() {
-        super.makeUI()
+    override func setupUI() {
+        super.setupUI()
         
         let stackView = StackViewBuilder()
             .withArrangedSubviews([titleLabel, contentTextView])

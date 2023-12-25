@@ -11,22 +11,26 @@ import RxCocoa
 class SplashViewModel: ViewModel {
     
     func transform(input: Input) -> Output {
-        let goNext = input.trigger
+        let configured = input.trigger
             .asObservable()
-            .flatMap { [unowned self] _ in return self.fetchLessons() }
-//            .delay(.seconds(2), scheduler: MainScheduler.instance)
+            .flatMap { [unowned self] _ in self.fetchLessons() }
             .asDriverOnErrorJustComplete()
         
-        return Output(goNext: goNext)
+        return Output(configured: configured)
     }
     
-    private func fetchLessons() -> Single<Void> {
-        return Single.create { single in
+    private func fetchLessons() -> Observable<Void> {
+        return Observable.create { observer in
             Task {
-                let _ = await LessonRepository.shared.fetchLessons()
-                single(.success(()))
+                do {
+                    let _ = try await LessonRepository.shared.fetchLessons()
+                    observer.onNext(())
+                    observer.onCompleted()
+                } catch {
+                    observer.onError(error)
+                }
             }
-            
+
             return Disposables.create()
         }
     }
@@ -40,6 +44,6 @@ extension SplashViewModel {
     }
     
     struct Output {
-        let goNext: Driver<Void>
+        let configured: Driver<Void>
     }
 }

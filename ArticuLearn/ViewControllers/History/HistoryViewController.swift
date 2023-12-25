@@ -11,8 +11,8 @@ import SnapKit
 class HistoryViewController: ViewController<HistoryViewModel> {
     
     // MARK: UI
-    override func makeUI() {
-        super.makeUI()
+    override func setupUI() {
+        super.setupUI()
         
         hideBackButtonIfNeeded = true
         navigationItem.title = "History"
