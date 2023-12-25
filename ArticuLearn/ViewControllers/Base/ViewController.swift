@@ -8,71 +8,65 @@
 import UIKit
 import RxSwift
 
-open class ViewController<VM: ViewModel>: UIViewController {
-    
+// MARK: - NavigationBarConfigurable
+
+protocol NavigationBarConfigurable {
+    func configureNavigationBar()
+    func addShadowToNavigationBar()
+}
+
+// MARK: - ViewController
+
+open class ViewController<VM: ViewModel>: UIViewController, NavigationBarConfigurable {
+
     open var disposeBag = DisposeBag()
     open var hideNavigationBarIfNeeded = false
     open var hideBackButtonIfNeeded = false
-    
+
     private let navigationBarVisibilityManager: NavigationBarVisibilityManager = .init()
     
     internal let viewModel: VM
-    
+
     public init(viewModel: VM) {
-        
         self.viewModel = viewModel
-        
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required public init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     deinit {
         let className = String(describing: type(of: self))
         Log.log(type: .info, message: "\(className) deinit")
     }
-    
+
     open override func viewDidLoad() {
         super.viewDidLoad()
-        
         setupUI()
+        configureNavigationBar()
         binding()
     }
-    
+
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         navigationBarVisibilityManager.adjustNavigationBarVisibilityIfNeeded(for: self,
                                                                              hideNavigationBarIfNeeded: hideNavigationBarIfNeeded)
-        
-        addShadowToNavgationBar()
-        
-        navigationController?.navigationBar.backgroundColor = .white
-        navigationController?.navigationBar.isTranslucent = true
-        
-        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.primary]
-        
-        if hideBackButtonIfNeeded {
-            navigationItem.leftBarButtonItem = nil
-        }
+        addShadowToNavigationBar()
     }
-    
+
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
         navigationBarVisibilityManager.restorePreviousNavigationBarVisibility(for: self)
     }
-    
+
     open func setupUI() {
         view.backgroundColor = .white
-        
-        let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(goBack))
-        backButton.tintColor = .primary
-        navigationItem.leftBarButtonItem = backButton
+        configureBackButton()
     }
-    
+
+    open func binding() {}
+
     @objc open func goBack() {
         if let nav = navigationController, nav.viewControllers.count > 1 {
             nav.popViewController(animated: true)
@@ -80,17 +74,26 @@ open class ViewController<VM: ViewModel>: UIViewController {
             navigationController?.dismiss(animated: true)
         }
     }
-    
-    open func binding() {}
-    
-    private func addShadowToNavgationBar() {
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        
+
+    // MARK: - NavigationBarConfigurable
+
+    func configureNavigationBar() {
+        navigationController?.navigationBar.backgroundColor = .white
+        navigationController?.navigationBar.isTranslucent = true
+        navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.primary]
+
+        if hideBackButtonIfNeeded {
+            navigationItem.leftBarButtonItem = nil
+        }
+    }
+
+    func addShadowToNavigationBar() {
+        guard let navigationBar = navigationController?.navigationBar else { return }
+
         view.viewWithTag(999)?.removeFromSuperview()
-        
+
         let topPadding = AppManager.default.lastWindow?.safeAreaInsets.top ?? 0
-        let shadowView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: abs(navigationController?.navigationBar.frame.height ?? 0) + topPadding))
+        let shadowView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: abs(navigationBar.frame.height) + topPadding))
         shadowView.tag = 999
         shadowView.backgroundColor = .white
         shadowView.layer.masksToBounds = false
@@ -100,5 +103,11 @@ open class ViewController<VM: ViewModel>: UIViewController {
         shadowView.layer.shadowRadius = 16
         shadowView.layer.zPosition = CGFloat.infinity
         view.addSubview(shadowView)
+    }
+
+    private func configureBackButton() {
+        let backButton = UIBarButtonItem(image: UIImage(named: "back"), style: .plain, target: self, action: #selector(goBack))
+        backButton.tintColor = .primary
+        navigationItem.leftBarButtonItem = backButton
     }
 }

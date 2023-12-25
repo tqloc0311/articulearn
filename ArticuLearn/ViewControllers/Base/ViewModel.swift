@@ -12,7 +12,6 @@ open class ViewModel {
     
     let disposeBag = DisposeBag()
     
-    
     deinit {
         let className = String(describing: type(of: self))
         Log.log(type: .info, message: "\(className) deinit")
