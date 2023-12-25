@@ -111,10 +111,10 @@ PODS:
 DEPENDENCIES:
   - FirebaseAnalytics (~> 10.14.0)
   - FirebaseCrashlytics (~> 10.14.0)
-  - NVActivityIndicatorView
+  - NVActivityIndicatorView (~> 5.1.1)
   - RxCocoa (~> 6.5.0)
   - RxSwift (~> 6.5.0)
-  - SnapKit
+  - SnapKit (~> 5.6.0)
 
 SPEC REPOS:
   trunk:
@@ -157,6 +157,6 @@ SPEC CHECKSUMS:
   RxSwift: 5710a9e6b17f3c3d6e40d6e559b9fa1e813b2ef8
   SnapKit: e01d52ebb8ddbc333eefe2132acf85c8227d9c25
 
-PODFILE CHECKSUM: bf47ab48ecb9355463e7d6cc22e86d7ae7d7aa6b
+PODFILE CHECKSUM: 137086a30da56022df4bec0a4d14a7d115f9e645
 
-COCOAPODS: 1.12.1
+COCOAPODS: 1.14.3

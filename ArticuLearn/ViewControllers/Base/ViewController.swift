@@ -13,7 +13,9 @@ open class ViewController<VM: ViewModel>: UIViewController {
     open var disposeBag = DisposeBag()
     open var hideNavigationBarIfNeeded = false
     open var hideBackButtonIfNeeded = false
-    private var isNavigationBarHidden = false
+    
+    private let navigationBarVisibilityManager: NavigationBarVisibilityManager = .init()
+    
     internal let viewModel: VM
     
     public init(viewModel: VM) {
@@ -29,7 +31,7 @@ open class ViewController<VM: ViewModel>: UIViewController {
     
     deinit {
         let className = String(describing: type(of: self))
-        print("\(className) deinit")
+        Log.log(type: .info, message: "\(className) deinit")
     }
     
     open override func viewDidLoad() {
@@ -42,11 +44,8 @@ open class ViewController<VM: ViewModel>: UIViewController {
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        let isPreviousNavBarHidden = navigationController?.isNavigationBarHidden ?? false
-        if isPreviousNavBarHidden != hideNavigationBarIfNeeded {
-            isNavigationBarHidden = isPreviousNavBarHidden
-            navigationController?.setNavigationBarHidden(hideNavigationBarIfNeeded, animated: animated)
-        }
+        navigationBarVisibilityManager.adjustNavigationBarVisibilityIfNeeded(for: self,
+                                                                             hideNavigationBarIfNeeded: hideNavigationBarIfNeeded)
         
         addShadowToNavgationBar()
         
@@ -63,9 +62,7 @@ open class ViewController<VM: ViewModel>: UIViewController {
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        if isNavigationBarHidden != hideNavigationBarIfNeeded {
-            navigationController?.setNavigationBarHidden(isNavigationBarHidden, animated: animated)
-        }
+        navigationBarVisibilityManager.restorePreviousNavigationBarVisibility(for: self)
     }
     
     open func makeUI() {

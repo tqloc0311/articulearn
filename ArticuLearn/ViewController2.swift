@@ -7,7 +7,7 @@
 
 import UIKit
 import Speech
-
+// https://shortstories-api.onrender.com/stories
 public class ViewController2: UIViewController, SFSpeechRecognizerDelegate {
     // MARK: Properties
     

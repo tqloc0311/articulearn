@@ -43,3 +43,17 @@ extension UIView {
     }
     
 }
+
+// MARK: Debug
+
+extension UIView {
+    func addDebugBorder(with color: UIColor = .red) {
+        borderColor = color
+        borderWidth = 1
+    }
+    
+    func removeDebugBorder() {
+        borderColor = .clear
+        borderWidth = 0
+    }
+}

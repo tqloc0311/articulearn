@@ -8,7 +8,7 @@
 import Foundation
 
 struct Lesson {
-    let id: Int
+    let id: String
+    let title: String
     let content: String
-    let levelIds: [Int]
 }

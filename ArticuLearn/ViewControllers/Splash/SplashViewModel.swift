@@ -13,12 +13,23 @@ class SplashViewModel: ViewModel {
     func transform(input: Input) -> Output {
         let goNext = input.trigger
             .asObservable()
-            .delay(.seconds(2), scheduler: MainScheduler.instance)
+            .flatMap { [unowned self] _ in return self.fetchLessons() }
+//            .delay(.seconds(2), scheduler: MainScheduler.instance)
             .asDriverOnErrorJustComplete()
         
         return Output(goNext: goNext)
     }
     
+    private func fetchLessons() -> Single<Void> {
+        return Single.create { single in
+            Task {
+                let _ = await LessonRepository.shared.fetchLessons()
+                single(.success(()))
+            }
+            
+            return Disposables.create()
+        }
+    }
 }
 
 // MARK: Input & Output
